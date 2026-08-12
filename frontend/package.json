@@ -1,0 +1,32 @@
+{
+	"name": "react-ts-latest",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build:dev": "tsc && vite build --minify false --mode development",
+		"build": "tsc && vite build --mode production",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@wailsio/runtime": "latest",
+		"clsx": "^2.1.1",
+		"lucide-react": "^1.31.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"tailwind-merge": "^3.6.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.8",
+		"@tailwindcss/vite": "^4.3.3",
+		"@types/react": "^18.2.43",
+		"@types/react-dom": "^18.2.17",
+		"@vitejs/plugin-react": "^6.0.0",
+		"autoprefixer": "^10.5.4",
+		"postcss": "^8.5.26",
+		"tailwindcss": "^4.3.3",
+		"typescript": "^5.2.2",
+		"vite": "^8.0.5"
+	}
+}
