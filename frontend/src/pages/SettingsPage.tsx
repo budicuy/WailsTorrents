@@ -200,7 +200,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 				{/* Appearance Theme Section */}
 				<div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
 					<div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-						<Sun className="w-4 h-4 text-indigo-400" />
+						<Sun className="w-4 h-4 text-orange-400" />
 						<span>Appearance Theme</span>
 					</div>
 
@@ -231,9 +231,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 											uiScale,
 										}).catch(console.error);
 									}}
-									className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl text-xs font-semibold border ${
+									className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl text-xs font-semibold border cursor-pointer ${
 										isSelected
-											? "bg-indigo-600/20 text-indigo-300 border-indigo-500/50 shadow-md shadow-indigo-500/10"
+											? "bg-orange-600/20 text-orange-400 border-orange-500/50 shadow-md shadow-orange-500/10"
 											: "bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700"
 									}`}
 								>
@@ -249,10 +249,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 				<div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-							<ZoomIn className="w-4 h-4 text-indigo-400" />
+							<ZoomIn className="w-4 h-4 text-orange-400" />
 							<span>UI Zoom & Display Scale</span>
 						</div>
-						<span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+						<span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20">
 							{uiScale}%
 						</span>
 					</div>
@@ -268,7 +268,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 								step="5"
 								value={uiScale}
 								onChange={(e) => handleScaleChange(Number(e.target.value))}
-								className="flex-1 accent-indigo-500 cursor-pointer"
+								className="flex-1 accent-orange-500 cursor-pointer"
 							/>
 							<span className="text-xs font-mono text-slate-400">150%</span>
 						</div>
@@ -280,10 +280,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 									key={preset}
 									type="button"
 									onClick={() => handleScaleChange(preset)}
-									className={`px-3 py-1 rounded-lg text-xs font-mono font-semibold border ${
+									className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-extrabold cursor-pointer active:scale-95 ${
 										uiScale === preset
-											? "bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20"
-											: "bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700"
+											? "bg-orange-600 text-white shadow-md shadow-orange-600/30"
+											: "bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800"
 									}`}
 								>
 									{preset}% {preset === 100 ? "(Default)" : ""}
@@ -296,7 +296,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 				{/* Keyboard Shortcuts Reference Guide */}
 				<div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
 					<div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-						<Keyboard className="w-4 h-4 text-indigo-400" />
+						<Keyboard className="w-4 h-4 text-orange-400" />
 						<span>Keyboard Shortcuts</span>
 					</div>
 
@@ -307,7 +307,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 								className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between gap-2"
 							>
 								<span className="text-slate-300">{item.label}</span>
-								<kbd className="px-2 py-1 bg-slate-900 border border-slate-700 rounded-md text-[11px] font-mono font-semibold text-indigo-300 shadow-sm">
+								<kbd className="px-2.5 py-1 bg-slate-900 border border-slate-700 rounded-full text-[11px] font-mono font-bold text-orange-400 shadow-sm">
 									{item.key}
 								</kbd>
 							</div>
@@ -318,7 +318,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 				{/* Save Bar */}
 				<div className="flex items-center justify-between pt-2">
 					{saved ? (
-						<span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20">
+						<span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
 							<Check className="w-4 h-4" /> Settings saved successfully!
 						</span>
 					) : (
@@ -328,9 +328,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 					<button
 						type="submit"
 						disabled={loading}
-						className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-indigo-600/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+						className="flex items-center gap-2 px-6 py-2.5 bg-orange-600 hover:bg-orange-500 text-white text-xs font-extrabold rounded-full shadow-md shadow-orange-600/30 cursor-pointer active:scale-95"
 					>
-						<Save className="w-4 h-4" />
+						<Save className="w-4 h-4 stroke-[2.5]" />
 						<span>Save Settings</span>
 					</button>
 				</div>

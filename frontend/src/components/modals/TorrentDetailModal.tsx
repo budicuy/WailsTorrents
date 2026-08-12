@@ -66,9 +66,9 @@ export const TorrentDetailModal: React.FC<TorrentDetailModalProps> = ({
 					<button
 						type="button"
 						onClick={() => setActiveTab("general")}
-						className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold border-b-2 transition-colors ${
+						className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold border-b-2 cursor-pointer ${
 							activeTab === "general"
-								? "border-indigo-500 text-indigo-400"
+								? "border-orange-500 text-orange-400 font-bold"
 								: "border-transparent text-slate-400 hover:text-slate-200"
 						}`}
 					>
@@ -78,9 +78,9 @@ export const TorrentDetailModal: React.FC<TorrentDetailModalProps> = ({
 					<button
 						type="button"
 						onClick={() => setActiveTab("files")}
-						className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold border-b-2 transition-colors ${
+						className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold border-b-2 cursor-pointer ${
 							activeTab === "files"
-								? "border-indigo-500 text-indigo-400"
+								? "border-orange-500 text-orange-400 font-bold"
 								: "border-transparent text-slate-400 hover:text-slate-200"
 						}`}
 					>
@@ -217,7 +217,7 @@ export const TorrentDetailModal: React.FC<TorrentDetailModalProps> = ({
 											</div>
 											<div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
 												<div
-													className="bg-indigo-500 h-full rounded-full"
+													className="bg-blue-500 h-full rounded-full"
 													style={{ width: `${Math.max(1, file.progress)}%` }}
 												/>
 											</div>

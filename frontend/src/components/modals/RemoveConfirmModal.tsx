@@ -36,18 +36,18 @@ export const RemoveConfirmModal: React.FC<RemoveConfirmModalProps> = ({
 						type="checkbox"
 						checked={deleteFiles}
 						onChange={(e) => setDeleteFiles(e.target.checked)}
-						className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-rose-600 focus:ring-rose-500"
+						className="w-4 h-4 rounded border-slate-700 bg-slate-900 accent-red-600"
 					/>
-					<span className="text-rose-300 font-medium">
+					<span className="text-red-400 font-bold">
 						Also delete downloaded files from disk
 					</span>
 				</label>
 
-				<div className="flex items-center justify-end gap-2 pt-3">
+				<div className="flex items-center justify-end gap-2.5 pt-3">
 					<button
 						type="button"
 						onClick={onClose}
-						className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-colors"
+						className="px-4 py-1.5 rounded-full text-xs font-bold text-slate-300 hover:bg-slate-800 cursor-pointer"
 					>
 						Cancel
 					</button>
@@ -57,7 +57,7 @@ export const RemoveConfirmModal: React.FC<RemoveConfirmModalProps> = ({
 							onConfirm(torrentId, deleteFiles);
 							onClose();
 						}}
-						className="px-4 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/25 transition-all active:scale-95"
+						className="px-5 py-1.5 rounded-full text-xs font-extrabold bg-red-600 hover:bg-red-500 text-white shadow-md shadow-red-600/30 cursor-pointer active:scale-95"
 					>
 						Remove
 					</button>

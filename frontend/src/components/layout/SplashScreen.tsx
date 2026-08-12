@@ -77,23 +77,23 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 			}`}
 		>
 			{/* Ambient Glowing Background Effect */}
-			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-tr from-indigo-600/20 via-purple-600/15 to-cyan-500/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
+			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-tr from-orange-600/20 via-amber-600/15 to-red-500/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
 
 			{/* Main Splash Content */}
 			<div className="relative z-10 flex flex-col items-center max-w-sm w-full px-6 space-y-6 text-center">
 				{/* Plain Enlarged Logo without card wrapper */}
 				<div className="relative flex items-center justify-center">
 					<img
-						src="/appicon.png"
+						src="./appicon.png"
 						alt="App Logo"
-						className="w-32 h-32 object-contain filter drop-shadow(0 8px 24px rgba(99, 102, 241, 0.5)) transition-transform duration-300 hover:scale-105"
+						className="w-32 h-32 aspect-square object-contain shrink-0 filter drop-shadow(0 8px 24px rgba(249, 115, 22, 0.5))"
 					/>
 				</div>
 
 				{/* Title & Tagline */}
 				<div className="space-y-1">
-					<h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-300 via-slate-100 to-cyan-300 bg-clip-text text-transparent">
-						TorrentLite
+					<h1 className="text-2xl font-extrabold tracking-tight text-white">
+						Torrent<span className="text-orange-500">Lite</span>
 					</h1>
 					<p className="text-xs font-medium text-slate-400">
 						Fast • Lightweight • Secure
@@ -104,7 +104,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 				<div className="w-full space-y-2 pt-2">
 					<div className="w-full bg-slate-900/90 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner">
 						<div
-							className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 transition-all duration-150 ease-out shadow-lg shadow-indigo-500/30"
+							className="h-full rounded-full bg-gradient-to-r from-orange-600 via-amber-500 to-red-500 shadow-lg shadow-orange-600/30"
 							style={{ width: `${progress}%` }}
 						/>
 					</div>

@@ -87,7 +87,7 @@ export const TorrentList: React.FC<TorrentListProps> = ({
 	if (filteredTorrents.length === 0) {
 		return (
 			<div className="h-full w-full flex flex-col items-center justify-center p-8 text-center">
-				<div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-4 text-indigo-400">
+				<div className="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-4 text-orange-400">
 					<DownloadCloud className="w-8 h-8" />
 				</div>
 				<h3 className="text-base font-bold text-slate-100 mb-1">
@@ -102,7 +102,7 @@ export const TorrentList: React.FC<TorrentListProps> = ({
 					<button
 						type="button"
 						onClick={onOpenAddTorrent}
-						className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition-all hover:scale-105"
+						className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-orange-600/20 cursor-pointer"
 					>
 						<Plus className="w-4 h-4" />
 						<span>Add Torrent File</span>
@@ -111,9 +111,9 @@ export const TorrentList: React.FC<TorrentListProps> = ({
 					<button
 						type="button"
 						onClick={onOpenAddMagnet}
-						className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold border border-slate-700 transition-all hover:scale-105"
+						className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-red-600/20 cursor-pointer"
 					>
-						<LinkIcon className="w-4 h-4 text-purple-400" />
+						<LinkIcon className="w-4 h-4 text-white" />
 						<span>Add Magnet Link</span>
 					</button>
 				</div>
@@ -152,30 +152,30 @@ export const TorrentList: React.FC<TorrentListProps> = ({
 					<button
 						type="button"
 						onClick={onPauseAll}
-						className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-xl text-xs font-semibold border border-amber-500/20"
+						className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-white rounded-full text-xs font-extrabold shadow-md shadow-amber-500/30 cursor-pointer active:scale-95"
 						title="Pause All Downloads"
 					>
-						<PauseCircle className="w-3.5 h-3.5" />
+						<PauseCircle className="w-3.5 h-3.5 stroke-[2.5]" />
 						<span>Pause All</span>
 					</button>
 
 					<button
 						type="button"
 						onClick={onResumeAll}
-						className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl text-xs font-semibold border border-emerald-500/20"
+						className="flex items-center gap-1.5 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-extrabold shadow-md shadow-emerald-600/30 cursor-pointer active:scale-95"
 						title="Resume All Downloads"
 					>
-						<PlayCircle className="w-3.5 h-3.5" />
+						<PlayCircle className="w-3.5 h-3.5 stroke-[2.5]" />
 						<span>Resume All</span>
 					</button>
 
 					<button
 						type="button"
 						onClick={onRemoveAllRequest}
-						className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl text-xs font-semibold border border-rose-500/20"
+						className="flex items-center gap-1.5 px-4 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs font-extrabold shadow-md shadow-red-600/30 cursor-pointer active:scale-95"
 						title="Delete All Downloads"
 					>
-						<Trash2 className="w-3.5 h-3.5" />
+						<Trash2 className="w-3.5 h-3.5 stroke-[2.5]" />
 						<span>Delete All</span>
 					</button>
 				</div>
@@ -186,12 +186,12 @@ export const TorrentList: React.FC<TorrentListProps> = ({
 							<button
 								type="button"
 								onClick={handleSelectAll}
-								className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700"
+								className="flex items-center gap-1.5 px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-xs font-extrabold border border-slate-700 cursor-pointer active:scale-95"
 							>
 								{selectedIds.length === sortedTorrents.length ? (
-									<CheckSquare className="w-3.5 h-3.5 text-indigo-400" />
+									<CheckSquare className="w-3.5 h-3.5 text-orange-400 stroke-[2.5]" />
 								) : (
-									<Square className="w-3.5 h-3.5 text-slate-400" />
+									<Square className="w-3.5 h-3.5 text-slate-400 stroke-[2.5]" />
 								)}
 								<span>
 									Select All ({selectedIds.length}/{sortedTorrents.length})
@@ -202,9 +202,9 @@ export const TorrentList: React.FC<TorrentListProps> = ({
 								<button
 									type="button"
 									onClick={handleRemoveSelected}
-									className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-rose-600/20"
+									className="flex items-center gap-1.5 px-4 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs font-extrabold shadow-md shadow-red-600/30 cursor-pointer active:scale-95"
 								>
-									<Trash2 className="w-3.5 h-3.5" />
+									<Trash2 className="w-3.5 h-3.5 stroke-[2.5]" />
 									<span>Delete Selected ({selectedIds.length})</span>
 								</button>
 							)}
@@ -217,10 +217,10 @@ export const TorrentList: React.FC<TorrentListProps> = ({
 							setIsSelectMode(!isSelectMode);
 							if (isSelectMode) setSelectedIds([]);
 						}}
-						className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border ${
+						className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold cursor-pointer active:scale-95 ${
 							isSelectMode
-								? "bg-indigo-600/20 text-indigo-300 border-indigo-500/50"
-								: "bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700"
+								? "bg-orange-600 hover:bg-orange-500 text-white shadow-md shadow-orange-600/30"
+								: "bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800"
 						}`}
 					>
 						<CheckSquare className="w-3.5 h-3.5" />

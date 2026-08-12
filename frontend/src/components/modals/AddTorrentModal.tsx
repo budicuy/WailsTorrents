@@ -155,7 +155,7 @@ export const AddTorrentModal: React.FC<AddTorrentModalProps> = ({
 				{/* Modal Header */}
 				<div className="flex items-center justify-between shrink-0">
 					<h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-						<FileUp className="w-5 h-5 text-indigo-400" /> Add Torrent File
+						<FileUp className="w-5 h-5 text-orange-400" /> Add Torrent File
 					</h3>
 					<button
 						type="button"
@@ -423,20 +423,22 @@ export const AddTorrentModal: React.FC<AddTorrentModalProps> = ({
 					)}
 
 					{/* Actions Footer */}
-					<div className="flex justify-end gap-2 pt-2 shrink-0 border-t border-slate-800/60">
+					<div className="flex justify-end gap-2.5 pt-2 shrink-0 border-t border-slate-800/60">
 						<button
 							type="button"
 							onClick={onClose}
-							className="px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-800 rounded-xl transition-colors"
+							className="px-5 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 rounded-full cursor-pointer"
 						>
 							Cancel
 						</button>
 						<button
 							type="submit"
 							disabled={loading || inspecting}
-							className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-indigo-600/25 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+							className="px-5 py-2 bg-orange-600 hover:bg-orange-500 text-white text-xs font-extrabold rounded-full shadow-md shadow-orange-600/30 flex items-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
 						>
-							{loading && <Loader2 className="w-4 h-4 animate-spin" />}
+							{loading && (
+								<Loader2 className="w-4 h-4 animate-spin stroke-[2.5]" />
+							)}
 							<span>Add Download</span>
 						</button>
 					</div>

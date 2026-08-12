@@ -32,18 +32,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
 			label: "All Downloads",
 			icon: Layers,
 			count: counts.all,
-			color: "text-indigo-400",
+			color: "text-orange-400",
 			badgeColor:
-				"bg-indigo-600 text-white font-bold shadow-sm shadow-indigo-600/30 border border-indigo-500/30",
+				"bg-orange-600 text-white font-bold shadow-sm shadow-orange-600/30 border border-orange-500/30",
 		},
 		{
 			id: "downloading" as const,
 			label: "Downloading",
 			icon: ArrowDownCircle,
 			count: counts.downloading,
-			color: "text-indigo-400",
+			color: "text-blue-400",
 			badgeColor:
-				"bg-indigo-600 text-white font-bold shadow-sm shadow-indigo-600/30 border border-indigo-500/30",
+				"bg-blue-600 text-white font-bold shadow-sm shadow-blue-600/30 border border-blue-500/30",
 		},
 		{
 			id: "completed" as const,
@@ -61,16 +61,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 			count: counts.paused,
 			color: "text-amber-400",
 			badgeColor:
-				"bg-amber-500 text-slate-950 font-bold shadow-sm shadow-amber-500/30 border border-amber-400/40",
+				"bg-amber-500 text-white font-bold shadow-sm shadow-amber-500/30 border border-amber-400/40",
 		},
 		{
 			id: "error" as const,
 			label: "Errors",
 			icon: AlertCircle,
 			count: counts.error,
-			color: "text-rose-400",
+			color: "text-red-400",
 			badgeColor:
-				"bg-rose-600 text-white font-bold shadow-sm shadow-rose-600/30 border border-rose-500/30",
+				"bg-red-600 text-white font-bold shadow-sm shadow-red-600/30 border border-red-500/30",
 		},
 	];
 
@@ -89,9 +89,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 							key={item.id}
 							type="button"
 							onClick={() => onSelectView(item.id)}
-							className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium ${
+							className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium cursor-pointer ${
 								isActive
-									? "bg-indigo-600/20 text-indigo-300 font-semibold border border-indigo-500/30"
+									? "bg-orange-600/20 text-orange-400 font-semibold border border-orange-500/40"
 									: "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
 							}`}
 						>
@@ -116,9 +116,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 				<button
 					type="button"
 					onClick={() => onSelectView("settings")}
-					className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium ${
+					className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium cursor-pointer ${
 						currentView === "settings"
-							? "bg-indigo-600/20 text-indigo-300 font-semibold border border-indigo-500/30"
+							? "bg-orange-600/20 text-orange-400 font-semibold border border-orange-500/40"
 							: "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
 					}`}
 				>
