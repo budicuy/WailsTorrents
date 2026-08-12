@@ -58,7 +58,13 @@ jobs:
         with:
           install-only: true
 
-      - name: Build Frontend & Windows Binary
+      - name: Install NSIS Installer Compiler
+        shell: powershell
+        run: |
+          choco install nsis --no-progress
+          echo "C:\Program Files (x86)\NSIS" >> $env:GITHUB_PATH
+
+      - name: Build Frontend & Windows Production Binary
         shell: powershell
         run: |
           wails3 task prod
@@ -68,16 +74,26 @@ jobs:
         run: |
           upx --best --lzma bin/TorrentLite.exe
 
-      - name: Prepare Artifact
+      - name: Package NSIS Installer
         shell: powershell
         run: |
-          Copy-Item bin/TorrentLite.exe bin/TorrentLite-Windows-amd64.exe
+          wails3 task windows:package
 
-      - name: Upload Windows Artifact
+      - name: Prepare Windows Artifacts
+        shell: powershell
+        run: |
+          Copy-Item bin/TorrentLite.exe bin/TorrentLite-Windows-Portable.exe
+          if (Test-Path bin/TorrentLite-amd64-installer.exe) {
+              Copy-Item bin/TorrentLite-amd64-installer.exe bin/TorrentLite-Windows-Setup.exe
+          }
+
+      - name: Upload Windows Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: TorrentLite-Windows-amd64.exe
-          path: bin/TorrentLite-Windows-amd64.exe
+          name: windows-binaries
+          path: |
+            bin/TorrentLite-Windows-Portable.exe
+            bin/TorrentLite-Windows-Setup.exe
 
   build-linux:
     name: Build Linux (amd64)
@@ -221,7 +237,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            release-artifacts/TorrentLite-Windows-amd64.exe/TorrentLite-Windows-amd64.exe
+            release-artifacts/windows-binaries/TorrentLite-Windows-Portable.exe
+            release-artifacts/windows-binaries/TorrentLite-Windows-Setup.exe
             release-artifacts/TorrentLite-Linux-amd64.tar.gz/TorrentLite-Linux-amd64.tar.gz
             release-artifacts/TorrentLite-macOS-universal.zip/TorrentLite-macOS-universal.zip
           draft: false
