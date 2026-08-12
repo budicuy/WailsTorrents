@@ -1,7 +1,7 @@
 version: '3'
 
 vars:
-  APP_NAME: "TorrentDownloader"
+  APP_NAME: "TorrentLite"
   BIN_DIR: "bin"
   PACKAGE_MANAGER: '{{.PACKAGE_MANAGER | default "bun"}}'
   VITE_PORT: '{{.WAILS_VITE_PORT | default 9245}}'
@@ -18,6 +18,18 @@ tasks:
     summary: Builds the application
     cmds:
       - task: "{{.GOOS}}:build"
+
+  production:
+    summary: Builds a production release of the application with UPX compression
+    cmds:
+      - task: "{{.GOOS}}:build"
+        vars:
+          PRODUCTION: "true"
+
+  prod:
+    summary: Alias for production build
+    cmds:
+      - task: production
 
   package:
     summary: Packages a production build of the application

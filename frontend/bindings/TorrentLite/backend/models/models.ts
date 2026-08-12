@@ -170,6 +170,96 @@ export class TorrentFile {
     }
 }
 
+export class TorrentFileInfo {
+    "path": string;
+    "size": number;
+
+    /** Creates a new TorrentFileInfo instance. */
+    constructor($$source: Partial<TorrentFileInfo> = {}) {
+        if (!("path" in $$source)) {
+            this["path"] = "";
+        }
+        if (!("size" in $$source)) {
+            this["size"] = 0;
+        }
+
+        Object.assign(this, $$source);
+    }
+
+    /**
+     * Creates a new TorrentFileInfo instance from a string or object.
+     */
+    static createFrom($$source: any = {}): TorrentFileInfo {
+        let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
+        return new TorrentFileInfo($$parsedSource as Partial<TorrentFileInfo>);
+    }
+}
+
+export class TorrentInspectData {
+    "name": string;
+    "hash": string;
+    "totalSize": number;
+    "pieceLength": number;
+    "numPieces": number;
+    "createdBy": string;
+    "creationDate": number;
+    "sourceFilePath": string;
+    "files": TorrentFileInfo[];
+    "trackers": string[];
+
+    /** Creates a new TorrentInspectData instance. */
+    constructor($$source: Partial<TorrentInspectData> = {}) {
+        if (!("name" in $$source)) {
+            this["name"] = "";
+        }
+        if (!("hash" in $$source)) {
+            this["hash"] = "";
+        }
+        if (!("totalSize" in $$source)) {
+            this["totalSize"] = 0;
+        }
+        if (!("pieceLength" in $$source)) {
+            this["pieceLength"] = 0;
+        }
+        if (!("numPieces" in $$source)) {
+            this["numPieces"] = 0;
+        }
+        if (!("createdBy" in $$source)) {
+            this["createdBy"] = "";
+        }
+        if (!("creationDate" in $$source)) {
+            this["creationDate"] = 0;
+        }
+        if (!("sourceFilePath" in $$source)) {
+            this["sourceFilePath"] = "";
+        }
+        if (!("files" in $$source)) {
+            this["files"] = [];
+        }
+        if (!("trackers" in $$source)) {
+            this["trackers"] = [];
+        }
+
+        Object.assign(this, $$source);
+    }
+
+    /**
+     * Creates a new TorrentInspectData instance from a string or object.
+     */
+    static createFrom($$source: any = {}): TorrentInspectData {
+        const $$createField8_0 = $$createType3;
+        const $$createField9_0 = $$createType4;
+        let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
+        if ("files" in $$parsedSource) {
+            $$parsedSource["files"] = $$createField8_0($$parsedSource["files"]);
+        }
+        if ("trackers" in $$parsedSource) {
+            $$parsedSource["trackers"] = $$createField9_0($$parsedSource["trackers"]);
+        }
+        return new TorrentInspectData($$parsedSource as Partial<TorrentInspectData>);
+    }
+}
+
 export class TorrentItem {
     "id": string;
     "name": string;
@@ -315,6 +405,11 @@ export class UserSettings {
     "theme": string;
     "maxActiveDownloads": number;
 
+    /**
+     * Zoom scale percentage (e.g., 100, 110, 90)
+     */
+    "uiScale": number;
+
     /** Creates a new UserSettings instance. */
     constructor($$source: Partial<UserSettings> = {}) {
         if (!("downloadDir" in $$source)) {
@@ -332,6 +427,9 @@ export class UserSettings {
         if (!("maxActiveDownloads" in $$source)) {
             this["maxActiveDownloads"] = 0;
         }
+        if (!("uiScale" in $$source)) {
+            this["uiScale"] = 0;
+        }
 
         Object.assign(this, $$source);
     }
@@ -348,3 +446,6 @@ export class UserSettings {
 // Private type creation functions
 const $$createType0 = TorrentFile.createFrom;
 const $$createType1 = $Create.Array($$createType0);
+const $$createType2 = TorrentFileInfo.createFrom;
+const $$createType3 = $Create.Array($$createType2);
+const $$createType4 = $Create.Array($Create.Any);

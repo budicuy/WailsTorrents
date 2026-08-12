@@ -1,9 +1,9 @@
 package services
 
 import (
-	"TorrentDownloader/backend/engine"
-	"TorrentDownloader/backend/models"
-	"TorrentDownloader/backend/storage"
+	"TorrentLite/backend/engine"
+	"TorrentLite/backend/models"
+	"TorrentLite/backend/storage"
 )
 
 type SettingsService struct {

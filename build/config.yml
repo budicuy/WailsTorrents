@@ -5,11 +5,11 @@ version: '3'
 
 # This information is used to generate the build assets.
 info:
-  companyName: "TorrentDownloader" # The name of the company
-  productName: "TorrentDownloader" # The name of the application
-  productIdentifier: "com.torrentdownloader.app" # The unique product identifier
-  description: "A fast and modern torrent downloader" # The application description
-  copyright: "(c) 2026, TorrentDownloader" # Copyright text
+  companyName: "TorrentLite" # The name of the company
+  productName: "TorrentLite" # The name of the application
+  productIdentifier: "com.torrentlite.app" # The unique product identifier
+  description: "A fast and modern BitTorrent client" # The application description
+  copyright: "(c) 2026, TorrentLite" # Copyright text
   comments: "Built with Wails v3" # Comments
   version: "1.0.0" # The application version
 

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"TorrentDownloader/backend/models"
+	"TorrentLite/backend/models"
 )
 
 func TestPersistenceStore(t *testing.T) {

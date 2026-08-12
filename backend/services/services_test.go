@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"TorrentDownloader/backend/models"
-	"TorrentDownloader/backend/storage"
+	"TorrentLite/backend/models"
+	"TorrentLite/backend/storage"
 )
 
 type MockEngine struct {

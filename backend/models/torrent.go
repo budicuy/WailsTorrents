@@ -56,6 +56,7 @@ type UserSettings struct {
 	UploadSpeedLimit   int64  `json:"uploadSpeedLimit"`   // Bytes per sec, 0 = unlimited
 	Theme              string `json:"theme"`              // "system", "dark", "light"
 	MaxActiveDownloads int    `json:"maxActiveDownloads"`
+	UIScale            int    `json:"uiScale"`            // Zoom scale percentage (e.g., 100, 110, 90)
 }
 
 type TorrentPersistData struct {
@@ -67,4 +68,22 @@ type TorrentPersistData struct {
 	Bytes     []byte    `json:"bytes,omitempty"` // raw .torrent bytes if added via file
 	IsPaused  bool      `json:"isPaused"`
 	AddedAt   time.Time `json:"addedAt"`
+}
+
+type TorrentFileInfo struct {
+	Path string `json:"path"`
+	Size int64  `json:"size"`
+}
+
+type TorrentInspectData struct {
+	Name           string            `json:"name"`
+	Hash           string            `json:"hash"`
+	TotalSize      int64             `json:"totalSize"`
+	PieceLength    int64             `json:"pieceLength"`
+	NumPieces      int               `json:"numPieces"`
+	CreatedBy      string            `json:"createdBy"`
+	CreationDate   int64             `json:"creationDate"`
+	SourceFilePath string            `json:"sourceFilePath"`
+	Files          []TorrentFileInfo `json:"files"`
+	Trackers       []string          `json:"trackers"`
 }

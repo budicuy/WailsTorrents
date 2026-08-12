@@ -77,7 +77,7 @@ tasks:
     deps:
       - task: install:frontend:deps
     cmds:
-      - npm run dev
+      - bun run dev
 
   update:build-assets:
     summary: Updates the build assets

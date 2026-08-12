@@ -8,10 +8,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"TorrentDownloader/backend/engine"
-	"TorrentDownloader/backend/models"
-	"TorrentDownloader/backend/services"
-	"TorrentDownloader/backend/storage"
+	"runtime/debug"
+
+	"TorrentLite/backend/engine"
+	"TorrentLite/backend/models"
+	"TorrentLite/backend/services"
+	"TorrentLite/backend/storage"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -28,7 +30,7 @@ func setupLogging() {
 	if err != nil {
 		appData = os.TempDir()
 	}
-	dataDir := filepath.Join(appData, "TorrentDownloader")
+	dataDir := filepath.Join(appData, "TorrentLite")
 	_ = os.MkdirAll(dataDir, 0755)
 	logFile := filepath.Join(dataDir, "app.log")
 
@@ -40,6 +42,10 @@ func setupLogging() {
 }
 
 func main() {
+	// Optimize Go runtime GC for lower memory footprint
+	debug.SetGCPercent(50)                  // Trigger GC at 50% heap growth instead of default 100%
+	debug.SetMemoryLimit(512 * 1024 * 1024) // Soft memory cap of 512MB
+
 	setupLogging()
 
 	// 1. Initialize Persistence Store
@@ -67,7 +73,7 @@ func main() {
 
 	// Create Wails App instance
 	app := application.New(application.Options{
-		Name:        "TorrentDownloader",
+		Name:        "TorrentLite",
 		Description: "A modern Windows BitTorrent Downloader",
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assetsFS),
@@ -89,7 +95,7 @@ func main() {
 
 	// App Window Configuration with 720p Minimum Dimensions (1280x720)
 	win := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:            "TorrentDownloader",
+		Title:            "TorrentLite",
 		Width:            1280,
 		Height:           720,
 		MinWidth:         1280,

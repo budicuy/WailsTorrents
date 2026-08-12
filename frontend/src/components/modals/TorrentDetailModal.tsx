@@ -40,8 +40,8 @@ export const TorrentDetailModal: React.FC<TorrentDetailModalProps> = ({
 	};
 
 	return (
-		<div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-			<div className="glass-panel max-w-2xl w-full p-6 rounded-2xl border border-slate-700 shadow-2xl space-y-5 max-h-[90vh] flex flex-col">
+		<div className="fixed inset-0 modal-overlay flex items-center justify-center z-50 p-4">
+			<div className="modal-card max-w-2xl w-full p-6 rounded-2xl shadow-2xl space-y-5 max-h-[90vh] flex flex-col">
 				{/* Header */}
 				<div className="flex items-start justify-between gap-4 shrink-0">
 					<div className="min-w-0">

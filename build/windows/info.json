@@ -5,10 +5,10 @@
 	"info": {
 		"0000": {
 			"ProductVersion": "1.0.0",
-			"CompanyName": "TorrentDownloader",
-			"FileDescription": "A fast and modern torrent downloader",
-			"LegalCopyright": "© 2026 TorrentDownloader",
-			"ProductName": "TorrentDownloader",
+			"CompanyName": "TorrentLite",
+			"FileDescription": "A fast and modern BitTorrent client",
+			"LegalCopyright": "© 2026 TorrentLite",
+			"ProductName": "TorrentLite",
 			"Comments": "Built with Wails v3"
 		}
 	}

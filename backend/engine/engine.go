@@ -8,10 +8,12 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"runtime/debug"
+	"sort"
 	"sync"
 	"time"
 
-	"TorrentDownloader/backend/models"
+	"TorrentLite/backend/models"
 
 	"github.com/anacrolix/torrent"
 	"github.com/anacrolix/torrent/metainfo"
@@ -60,9 +62,8 @@ type AnacrolixEngine struct {
 }
 
 func NewAnacrolixEngine(defaultDownloadDir string) (*AnacrolixEngine, error) {
-	// Use unlimited limiters with a large burst so initial connections are not throttled.
-	// The burst of 256MB lets the client buffer enough data for fast piece reads.
-	const burstBytes = 256 << 20 // 256 MB burst
+	// Large 256MB burst buffer so socket reads are never throttled
+	const burstBytes = 256 << 20
 	downloadLimiter := rate.NewLimiter(rate.Inf, burstBytes)
 	uploadLimiter := rate.NewLimiter(rate.Inf, burstBytes)
 
@@ -70,18 +71,17 @@ func NewAnacrolixEngine(defaultDownloadDir string) (*AnacrolixEngine, error) {
 	cfg.DataDir = defaultDownloadDir
 	cfg.NoUpload = false
 	cfg.Seed = true
-	// More concurrent piece hashers = faster initial piece verification
-	cfg.PieceHashersPerTorrent = 8
-	// Allow more established connections per torrent for better peer discovery
-	cfg.EstablishedConnsPerTorrent = 100
-	cfg.HalfOpenConnsPerTorrent = 50
-	cfg.TotalHalfOpenConns = 200
-	// Higher peer water marks so DHT/tracker peers fill up faster
-	cfg.TorrentPeersHighWater = 1000
-	cfg.TorrentPeersLowWater = 100
-	// Enable UPnP port forwarding so peers can connect to us
+
+	// High Performance Speed Settings:
+	cfg.PieceHashersPerTorrent = 8       // Parallel hashing for fast piece validation
+	cfg.EstablishedConnsPerTorrent = 250 // High peer connections per torrent for max download speed
+	cfg.HalfOpenConnsPerTorrent = 100
+	cfg.TotalHalfOpenConns = 300
+	cfg.TorrentPeersHighWater = 2000 // High peer watermark to discover fast seeders
+	cfg.TorrentPeersLowWater = 200
+
+	cfg.DropMutuallyCompletePeers = true
 	cfg.NoDefaultPortForwarding = false
-	// Enable periodic DHT announces for better peer discovery
 	cfg.PeriodicallyAnnounceTorrentsToDht = true
 	cfg.DownloadRateLimiter = downloadLimiter
 	cfg.UploadRateLimiter = uploadLimiter
@@ -248,6 +248,9 @@ func (e *AnacrolixEngine) Remove(id string, deleteFiles bool) error {
 		}
 	}
 
+	// Reclaim memory immediately after dropping torrent
+	debug.FreeOSMemory()
+
 	return nil
 }
 
@@ -314,26 +317,20 @@ func (e *AnacrolixEngine) GetTorrent(id string) (*models.TorrentItem, error) {
 		item.ETASeconds = -1
 	}
 
-	// Detect piece verification (checking) via piece state runs
+	// Detect piece verification (checking) ONLY if incomplete, active, and not downloading data
 	isChecking := false
-	runs := t.PieceStateRuns()
-	for _, run := range runs {
-		// PieceStateRun embeds PieceState which has Hashing and QueuedForHash fields.
-		// Checking = QueuedForHash || Hashing (as per anacrolix source line 756)
-		if run.Hashing || run.QueuedForHash || run.Checking {
-			isChecking = true
-			break
+	if !meta.isPaused && meta.dnSpeed == 0 && (bytesCompleted < item.TotalSize || item.TotalSize == 0) {
+		runs := t.PieceStateRuns()
+		for _, run := range runs {
+			if run.Hashing || run.QueuedForHash || run.Checking {
+				isChecking = true
+				break
+			}
 		}
-	}
-	// Secondary check: if bytes hashed > 0 but completed bytes == 0, we're still verifying
-	if !isChecking && stats.BytesHashed.Int64() > 0 && bytesCompleted == 0 {
-		isChecking = true
 	}
 
 	if meta.isPaused {
 		item.Status = models.StatusPaused
-	} else if isChecking {
-		item.Status = models.StatusChecking
 	} else if bytesCompleted >= item.TotalSize && item.TotalSize > 0 {
 		item.Status = models.StatusCompleted
 		if meta.completedAt == nil {
@@ -341,6 +338,10 @@ func (e *AnacrolixEngine) GetTorrent(id string) (*models.TorrentItem, error) {
 			meta.completedAt = &now
 		}
 		item.CompletedAt = meta.completedAt
+	} else if item.DownloadSpeed > 0 {
+		item.Status = models.StatusDownloading
+	} else if isChecking {
+		item.Status = models.StatusChecking
 	} else {
 		item.Status = models.StatusDownloading
 	}
@@ -404,6 +405,12 @@ func (e *AnacrolixEngine) GetTorrents() []*models.TorrentItem {
 			result = append(result, item)
 		}
 	}
+
+	// Always sort deterministically by AddedAt descending (newest file on top)
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].AddedAt.After(result[j].AddedAt)
+	})
+
 	return result
 }
 

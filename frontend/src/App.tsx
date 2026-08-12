@@ -4,13 +4,15 @@ import {
 	FileService,
 	SettingsService,
 	TorrentService,
-} from "../bindings/TorrentDownloader/backend/services/index";
+} from "../bindings/TorrentLite/backend/services/index";
 import { Navbar } from "./components/layout/Navbar";
 import { Sidebar } from "./components/layout/Sidebar";
+import { SplashScreen } from "./components/layout/SplashScreen";
 import { AddMagnetModal } from "./components/modals/AddMagnetModal";
 import { AddTorrentModal } from "./components/modals/AddTorrentModal";
+import { RemoveConfirmModal } from "./components/modals/RemoveConfirmModal";
 import { TorrentDetailModal } from "./components/modals/TorrentDetailModal";
-import { TorrentList } from "./components/torrents/TorrentList";
+import { TorrentList } from "./components/modals/torrents/TorrentList";
 import { SettingsPage } from "./pages/SettingsPage";
 import type {
 	TorrentDetails,
@@ -31,11 +33,19 @@ export function App() {
 		uploadSpeedLimit: 0,
 		theme: "system",
 		maxActiveDownloads: 5,
+		uiScale: 100,
 	});
+
+	const [isAppLoading, setIsAppLoading] = useState(true);
+	const [showSplashScreen, setShowSplashScreen] = useState(true);
 
 	const [isAddTorrentOpen, setIsAddTorrentOpen] = useState(false);
 	const [isAddMagnetOpen, setIsAddMagnetOpen] = useState(false);
 	const [selectedDetailId, setSelectedDetailId] = useState<string | null>(null);
+	const [removeTarget, setRemoveTarget] = useState<{
+		id: string;
+		name: string;
+	} | null>(null);
 
 	// Fetch initial data
 	const loadInitialData = useCallback(async () => {
@@ -51,6 +61,8 @@ export function App() {
 			}
 		} catch (err) {
 			console.error("Failed to load initial application data:", err);
+		} finally {
+			setIsAppLoading(false);
 		}
 	}, []);
 
@@ -71,41 +83,158 @@ export function App() {
 		};
 	}, [loadInitialData]);
 
+	// Apply active theme (dark, light, or system) to documentElement
+	useEffect(() => {
+		const applyTheme = () => {
+			const themeMode = settings.theme || "system";
+			let isDark = true;
+
+			if (themeMode === "dark") {
+				isDark = true;
+			} else if (themeMode === "light") {
+				isDark = false;
+			} else {
+				isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+			}
+
+			if (isDark) {
+				document.documentElement.classList.add("dark");
+				document.documentElement.classList.remove("light");
+			} else {
+				document.documentElement.classList.add("light");
+				document.documentElement.classList.remove("dark");
+			}
+		};
+
+		applyTheme();
+
+		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+		const handleChange = () => {
+			if ((settings.theme || "system") === "system") {
+				applyTheme();
+			}
+		};
+
+		mediaQuery.addEventListener("change", handleChange);
+		return () => mediaQuery.removeEventListener("change", handleChange);
+	}, [settings.theme]);
+
+	const handleSaveSettings = useCallback(async (newSettings: UserSettings) => {
+		await SettingsService.SaveSettings(
+			newSettings as unknown as Parameters<
+				typeof SettingsService.SaveSettings
+			>[0],
+		);
+		setSettings(newSettings);
+	}, []);
+
+	// Apply UI Zoom scale via root font-size scaling
+	useEffect(() => {
+		const scale = settings.uiScale || 100;
+		document.documentElement.style.fontSize = `${scale}%`;
+	}, [settings.uiScale]);
+
+	// Global Keyboard Shortcuts (Ctrl +, Ctrl -, Ctrl 0, Ctrl N, Ctrl M, Ctrl ,)
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			const isCtrl = e.ctrlKey || e.metaKey;
+			if (!isCtrl) return;
+
+			const key = e.key.toLowerCase();
+
+			if (key === "=" || key === "+" || e.code === "NumpadAdd") {
+				e.preventDefault();
+				const current = settings.uiScale || 100;
+				const nextScale = Math.min(150, current + 10);
+				handleSaveSettings({ ...settings, uiScale: nextScale });
+			} else if (key === "-" || e.code === "NumpadSubtract") {
+				e.preventDefault();
+				const current = settings.uiScale || 100;
+				const nextScale = Math.max(75, current - 10);
+				handleSaveSettings({ ...settings, uiScale: nextScale });
+			} else if (key === "0" || e.code === "Numpad0") {
+				e.preventDefault();
+				handleSaveSettings({ ...settings, uiScale: 100 });
+			} else if (key === "n") {
+				e.preventDefault();
+				setIsAddTorrentOpen(true);
+			} else if (key === "m") {
+				e.preventDefault();
+				setIsAddMagnetOpen(true);
+			} else if (key === ",") {
+				e.preventDefault();
+				setCurrentView("settings");
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [settings, handleSaveSettings]);
+
 	// Actions
-	const handlePause = async (id: string) => {
+	const handlePause = useCallback(async (id: string) => {
 		try {
 			await TorrentService.PauseTorrent(id);
 		} catch (err) {
 			console.error("Failed to pause torrent:", err);
 		}
-	};
+	}, []);
 
-	const handleResume = async (id: string) => {
+	const handleResume = useCallback(async (id: string) => {
 		try {
 			await TorrentService.ResumeTorrent(id);
 		} catch (err) {
 			console.error("Failed to resume torrent:", err);
 		}
-	};
+	}, []);
 
-	const handleRemove = async (id: string, deleteFiles: boolean) => {
+	const handlePauseAll = useCallback(async () => {
 		try {
-			await TorrentService.RemoveTorrent(id, deleteFiles);
-			setTorrents((prev) =>
-				Array.isArray(prev) ? prev.filter((t) => t.id !== id) : [],
-			);
+			await TorrentService.PauseAllTorrents();
+			loadInitialData();
 		} catch (err) {
-			console.error("Failed to remove torrent:", err);
+			console.error("Failed to pause all torrents:", err);
 		}
-	};
+	}, [loadInitialData]);
 
-	const handleOpenFolder = async (path: string) => {
+	const handleResumeAll = useCallback(async () => {
+		try {
+			await TorrentService.ResumeAllTorrents();
+			loadInitialData();
+		} catch (err) {
+			console.error("Failed to resume all torrents:", err);
+		}
+	}, [loadInitialData]);
+
+	const handleConfirmRemove = useCallback(
+		async (id: string, deleteFiles: boolean) => {
+			if (!removeTarget) return;
+			try {
+				if (id === "all") {
+					await TorrentService.RemoveAllTorrents(deleteFiles);
+				} else if (id.includes(",")) {
+					const ids = id.split(",");
+					await TorrentService.RemoveSelectedTorrents(ids, deleteFiles);
+				} else {
+					await TorrentService.RemoveTorrent(id, deleteFiles);
+				}
+				loadInitialData();
+			} catch (err) {
+				console.error("Failed to remove torrent(s):", err);
+			} finally {
+				setRemoveTarget(null);
+			}
+		},
+		[removeTarget, loadInitialData],
+	);
+
+	const handleOpenFolder = useCallback(async (path: string) => {
 		try {
 			await FileService.OpenDownloadFolder(path);
 		} catch (err) {
 			console.error("Failed to open download folder:", err);
 		}
-	};
+	}, []);
 
 	const handleSelectFile = async (): Promise<string> => {
 		try {
@@ -153,15 +282,6 @@ export function App() {
 		}
 	};
 
-	const handleSaveSettings = async (newSettings: UserSettings) => {
-		await SettingsService.SaveSettings(
-			newSettings as unknown as Parameters<
-				typeof SettingsService.SaveSettings
-			>[0],
-		);
-		setSettings(newSettings);
-	};
-
 	// Safe Array Reference
 	const safeTorrents = Array.isArray(torrents) ? torrents : [];
 
@@ -190,7 +310,14 @@ export function App() {
 	};
 
 	return (
-		<div className="flex flex-col h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden select-none">
+		<div className="flex flex-col h-full w-full bg-slate-950 text-slate-100 overflow-hidden select-none app-shell">
+			{showSplashScreen && (
+				<SplashScreen
+					isLoading={isAppLoading}
+					onFinished={() => setShowSplashScreen(false)}
+				/>
+			)}
+
 			{/* Top Navbar */}
 			<Navbar
 				totalDnSpeed={totalDnSpeed}
@@ -225,9 +352,20 @@ export function App() {
 							searchQuery={searchQuery}
 							onPause={handlePause}
 							onResume={handleResume}
+							onPauseAll={handlePauseAll}
+							onResumeAll={handleResumeAll}
 							onOpenFolder={handleOpenFolder}
 							onShowDetails={(id) => setSelectedDetailId(id)}
-							onRemove={handleRemove}
+							onRemoveRequest={(id, name) => setRemoveTarget({ id, name })}
+							onRemoveAllRequest={() =>
+								setRemoveTarget({ id: "all", name: "All Torrents" })
+							}
+							onRemoveSelectedRequest={(ids) =>
+								setRemoveTarget({
+									id: ids.join(","),
+									name: `${ids.length} selected torrents`,
+								})
+							}
 							onOpenAddTorrent={() => setIsAddTorrentOpen(true)}
 							onOpenAddMagnet={() => setIsAddMagnetOpen(true)}
 						/>
@@ -257,6 +395,14 @@ export function App() {
 				torrentId={selectedDetailId}
 				onClose={() => setSelectedDetailId(null)}
 				onFetchDetails={handleFetchDetails}
+			/>
+
+			<RemoveConfirmModal
+				isOpen={!!removeTarget}
+				torrentId={removeTarget?.id || ""}
+				torrentName={removeTarget?.name || ""}
+				onClose={() => setRemoveTarget(null)}
+				onConfirm={handleConfirmRemove}
 			/>
 		</div>
 	);

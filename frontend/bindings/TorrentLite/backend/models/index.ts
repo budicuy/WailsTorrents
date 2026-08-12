@@ -4,6 +4,8 @@
 export {
     TorrentDetails,
     TorrentFile,
+    TorrentFileInfo,
+    TorrentInspectData,
     TorrentItem,
     TorrentStatus,
     UserSettings

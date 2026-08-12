@@ -10,43 +10,59 @@ import { Call as $Call, CancellablePromise as $CancellablePromise, Create as $Cr
 import * as models$0 from "../models/models.js";
 
 export function AddMagnetLink(magnetURI: string, downloadDir: string): $CancellablePromise<models$0.TorrentItem | null> {
-    return $Call.ByID(1056966118, magnetURI, downloadDir).then(($result: any) => {
+    return $Call.ByID(2469917909, magnetURI, downloadDir).then(($result: any) => {
         return $$createType1($result);
     });
 }
 
 export function AddTorrentFile(filePath: string, downloadDir: string): $CancellablePromise<models$0.TorrentItem | null> {
-    return $Call.ByID(2730919668, filePath, downloadDir).then(($result: any) => {
+    return $Call.ByID(2356802333, filePath, downloadDir).then(($result: any) => {
         return $$createType1($result);
     });
 }
 
 export function GetTorrentDetails(id: string): $CancellablePromise<models$0.TorrentDetails | null> {
-    return $Call.ByID(2778592835, id).then(($result: any) => {
+    return $Call.ByID(1077973900, id).then(($result: any) => {
         return $$createType3($result);
     });
 }
 
 export function GetTorrents(): $CancellablePromise<(models$0.TorrentItem | null)[]> {
-    return $Call.ByID(1212517824).then(($result: any) => {
+    return $Call.ByID(1313541311).then(($result: any) => {
         return $$createType4($result);
     });
 }
 
+export function PauseAllTorrents(): $CancellablePromise<void> {
+    return $Call.ByID(2148954738);
+}
+
 export function PauseTorrent(id: string): $CancellablePromise<void> {
-    return $Call.ByID(3536010301, id);
+    return $Call.ByID(2792831304, id);
+}
+
+export function RemoveAllTorrents(deleteFiles: boolean): $CancellablePromise<void> {
+    return $Call.ByID(3848619232, deleteFiles);
+}
+
+export function RemoveSelectedTorrents(ids: string[], deleteFiles: boolean): $CancellablePromise<void> {
+    return $Call.ByID(4000862946, ids, deleteFiles);
 }
 
 export function RemoveTorrent(id: string, deleteFiles: boolean): $CancellablePromise<void> {
-    return $Call.ByID(2640746957, id, deleteFiles);
+    return $Call.ByID(388339418, id, deleteFiles);
+}
+
+export function ResumeAllTorrents(): $CancellablePromise<void> {
+    return $Call.ByID(2613692429);
 }
 
 export function ResumeTorrent(id: string): $CancellablePromise<void> {
-    return $Call.ByID(1783414412, id);
+    return $Call.ByID(1546249227, id);
 }
 
 export function Shutdown(): $CancellablePromise<void> {
-    return $Call.ByID(8853547);
+    return $Call.ByID(2165587382);
 }
 
 // Private type creation functions

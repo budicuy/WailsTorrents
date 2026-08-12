@@ -1,4 +1,16 @@
-import { Check, Folder, Gauge, Monitor, Moon, Save, Sun } from "lucide-react";
+import {
+	Check,
+	Command,
+	Folder,
+	Gauge,
+	Keyboard,
+	Monitor,
+	Moon,
+	RotateCcw,
+	Save,
+	Sun,
+	ZoomIn,
+} from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import type { UserSettings } from "../types/torrent";
@@ -22,6 +34,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 	const [theme, setTheme] = useState<"system" | "dark" | "light">(
 		settings.theme || "system",
 	);
+	const [uiScale, setUiScale] = useState(settings.uiScale || 100);
 	const [saved, setSaved] = useState(false);
 	const [loading, setLoading] = useState(false);
 
@@ -30,6 +43,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 		setDownloadLimit(settings.downloadSpeedLimit);
 		setUploadLimit(settings.uploadSpeedLimit);
 		setTheme(settings.theme || "system");
+		setUiScale(settings.uiScale || 100);
 	}, [settings]);
 
 	const speedOptions = [
@@ -62,6 +76,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 				downloadSpeedLimit: downloadLimit,
 				uploadSpeedLimit: uploadLimit,
 				theme,
+				uiScale,
 			});
 			setSaved(true);
 			setTimeout(() => setSaved(false), 2500);
@@ -72,6 +87,27 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 		}
 	};
 
+	const handleScaleChange = (newScale: number) => {
+		setUiScale(newScale);
+		onSaveSettings({
+			...settings,
+			downloadDir,
+			downloadSpeedLimit: downloadLimit,
+			uploadSpeedLimit: uploadLimit,
+			theme,
+			uiScale: newScale,
+		}).catch(console.error);
+	};
+
+	const shortcutList = [
+		{ key: "Ctrl + / Cmd +", label: "Zoom In UI (+10%)", icon: ZoomIn },
+		{ key: "Ctrl - / Cmd -", label: "Zoom Out UI (-10%)", icon: ZoomIn },
+		{ key: "Ctrl 0 / Cmd 0", label: "Reset UI Scale (100%)", icon: RotateCcw },
+		{ key: "Ctrl N / Cmd N", label: "Add Torrent File", icon: Keyboard },
+		{ key: "Ctrl M / Cmd M", label: "Add Magnet Link", icon: Keyboard },
+		{ key: "Ctrl , / Cmd ,", label: "Open Settings", icon: Command },
+	];
+
 	return (
 		<div className="p-8 max-w-3xl mx-auto space-y-8 overflow-y-auto max-h-full">
 			<div>
@@ -79,8 +115,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 					Application Settings
 				</h2>
 				<p className="text-xs text-slate-400 mt-1">
-					Configure default download folders, global bandwidth limits, and
-					display themes.
+					Configure default download folders, bandwidth limits, appearance, and
+					UI zoom shortcuts.
 				</p>
 			</div>
 
@@ -102,30 +138,30 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 						<button
 							type="button"
 							onClick={handlePickFolder}
-							className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-colors"
+							className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700"
 						>
 							Browse...
 						</button>
 					</div>
 				</div>
 
-				{/* Bandwidth Limits Section */}
+				{/* Bandwidth Speed Limits */}
 				<div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
 					<div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
 						<Gauge className="w-4 h-4 text-indigo-400" />
-						<span>Global Bandwidth Limits</span>
+						<span>Global Transfer Limits</span>
 					</div>
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
 							<label
-								htmlFor="max-download-limit"
-								className="block text-xs font-medium text-slate-400 mb-1.5"
+								htmlFor="settings-download-limit"
+								className="block text-xs text-slate-400 mb-1.5"
 							>
-								Maximum Download Speed
+								Max Download Speed
 							</label>
 							<select
-								id="max-download-limit"
+								id="settings-download-limit"
 								value={downloadLimit}
 								onChange={(e) => setDownloadLimit(Number(e.target.value))}
 								className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
@@ -140,13 +176,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
 						<div>
 							<label
-								htmlFor="max-upload-limit"
-								className="block text-xs font-medium text-slate-400 mb-1.5"
+								htmlFor="settings-upload-limit"
+								className="block text-xs text-slate-400 mb-1.5"
 							>
-								Maximum Upload Speed
+								Max Upload Speed
 							</label>
 							<select
-								id="max-upload-limit"
+								id="settings-upload-limit"
 								value={uploadLimit}
 								onChange={(e) => setUploadLimit(Number(e.target.value))}
 								className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
@@ -161,7 +197,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 					</div>
 				</div>
 
-				{/* Theme Preference Section */}
+				{/* Appearance Theme Section */}
 				<div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
 					<div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
 						<Sun className="w-4 h-4 text-indigo-400" />
@@ -180,10 +216,22 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 								<button
 									key={item.id}
 									type="button"
-									onClick={() =>
-										setTheme(item.id as "system" | "dark" | "light")
-									}
-									className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl text-xs font-semibold border transition-all ${
+									onClick={() => {
+										const selectedTheme = item.id as
+											| "system"
+											| "dark"
+											| "light";
+										setTheme(selectedTheme);
+										onSaveSettings({
+											...settings,
+											downloadDir,
+											downloadSpeedLimit: downloadLimit,
+											uploadSpeedLimit: uploadLimit,
+											theme: selectedTheme,
+											uiScale,
+										}).catch(console.error);
+									}}
+									className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl text-xs font-semibold border ${
 										isSelected
 											? "bg-indigo-600/20 text-indigo-300 border-indigo-500/50 shadow-md shadow-indigo-500/10"
 											: "bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700"
@@ -194,6 +242,76 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 								</button>
 							);
 						})}
+					</div>
+				</div>
+
+				{/* UI Zoom & Scale Section */}
+				<div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+							<ZoomIn className="w-4 h-4 text-indigo-400" />
+							<span>UI Zoom & Display Scale</span>
+						</div>
+						<span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+							{uiScale}%
+						</span>
+					</div>
+
+					<div className="space-y-3">
+						{/* Slider */}
+						<div className="flex items-center gap-4">
+							<span className="text-xs font-mono text-slate-400">75%</span>
+							<input
+								type="range"
+								min="75"
+								max="150"
+								step="5"
+								value={uiScale}
+								onChange={(e) => handleScaleChange(Number(e.target.value))}
+								className="flex-1 accent-indigo-500 cursor-pointer"
+							/>
+							<span className="text-xs font-mono text-slate-400">150%</span>
+						</div>
+
+						{/* Scale Presets */}
+						<div className="flex items-center justify-between gap-2 pt-1">
+							{[75, 90, 100, 110, 125, 150].map((preset) => (
+								<button
+									key={preset}
+									type="button"
+									onClick={() => handleScaleChange(preset)}
+									className={`px-3 py-1 rounded-lg text-xs font-mono font-semibold border ${
+										uiScale === preset
+											? "bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20"
+											: "bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700"
+									}`}
+								>
+									{preset}% {preset === 100 ? "(Default)" : ""}
+								</button>
+							))}
+						</div>
+					</div>
+				</div>
+
+				{/* Keyboard Shortcuts Reference Guide */}
+				<div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+					<div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+						<Keyboard className="w-4 h-4 text-indigo-400" />
+						<span>Keyboard Shortcuts</span>
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+						{shortcutList.map((item) => (
+							<div
+								key={item.key}
+								className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between gap-2"
+							>
+								<span className="text-slate-300">{item.label}</span>
+								<kbd className="px-2 py-1 bg-slate-900 border border-slate-700 rounded-md text-[11px] font-mono font-semibold text-indigo-300 shadow-sm">
+									{item.key}
+								</kbd>
+							</div>
+						))}
 					</div>
 				</div>
 
@@ -210,7 +328,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 					<button
 						type="submit"
 						disabled={loading}
-						className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-indigo-600/20 transition-all hover:scale-105 active:scale-95"
+						className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-indigo-600/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
 					>
 						<Save className="w-4 h-4" />
 						<span>Save Settings</span>

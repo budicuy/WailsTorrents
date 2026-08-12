@@ -48,6 +48,7 @@ export interface UserSettings {
 	uploadSpeedLimit: number;
 	theme: "system" | "dark" | "light";
 	maxActiveDownloads: number;
+	uiScale: number;
 }
 
 export type ViewFilter =
@@ -56,3 +57,21 @@ export type ViewFilter =
 	| "completed"
 	| "paused"
 	| "error";
+
+export interface TorrentFileInfo {
+	path: string;
+	size: number;
+}
+
+export interface TorrentInspectData {
+	name: string;
+	hash: string;
+	totalSize: number;
+	pieceLength: number;
+	numPieces: number;
+	createdBy: string;
+	creationDate: number;
+	sourceFilePath: string;
+	files: TorrentFileInfo[];
+	trackers: string[];
+}
