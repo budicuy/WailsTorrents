@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"os"
 	"path/filepath"
@@ -88,7 +89,12 @@ func NewAnacrolixEngine(defaultDownloadDir string) (*AnacrolixEngine, error) {
 
 	client, err := torrent.NewClient(cfg)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create torrent client: %w", err)
+		log.Printf("[Engine] Default listen port busy, falling back to dynamic port: %v", err)
+		cfg.ListenPort = 0
+		client, err = torrent.NewClient(cfg)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create torrent client: %w", err)
+		}
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())

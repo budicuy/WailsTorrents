@@ -70,7 +70,7 @@ export function App() {
 		loadInitialData();
 
 		// Listen to real-time throttled stats event from Go backend
-		const unsubscribe = Events.On("torrent:stats", (event) => {
+		const unsubscribeStats = Events.On("torrent:stats", (event) => {
 			if (event && Array.isArray(event.data)) {
 				setTorrents(event.data as unknown as TorrentItem[]);
 			} else if (event?.data) {
@@ -79,7 +79,7 @@ export function App() {
 		});
 
 		return () => {
-			if (unsubscribe) unsubscribe();
+			if (unsubscribeStats) unsubscribeStats();
 		};
 	}, [loadInitialData]);
 

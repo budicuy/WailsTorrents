@@ -20,6 +20,7 @@ import type { TorrentInspectData } from "../../types/torrent";
 
 interface AddMagnetModalProps {
 	isOpen: boolean;
+	initialMagnetURI?: string;
 	defaultDownloadDir: string;
 	onClose: () => void;
 	onSelectFolder: () => Promise<string>;
@@ -28,6 +29,7 @@ interface AddMagnetModalProps {
 
 export const AddMagnetModal: React.FC<AddMagnetModalProps> = ({
 	isOpen,
+	initialMagnetURI,
 	defaultDownloadDir,
 	onClose,
 	onSelectFolder,
@@ -70,12 +72,16 @@ export const AddMagnetModal: React.FC<AddMagnetModalProps> = ({
 	useEffect(() => {
 		if (isOpen) {
 			setDownloadDir(defaultDownloadDir || "");
-			setMagnetURI("");
+			const uri = initialMagnetURI || "";
+			setMagnetURI(uri);
 			setInspectData(null);
 			setError("");
 			setActiveTab("general");
+			if (uri) {
+				inspectMagnet(uri);
+			}
 		}
-	}, [isOpen, defaultDownloadDir]);
+	}, [isOpen, defaultDownloadDir, initialMagnetURI, inspectMagnet]);
 
 	if (!isOpen) return null;
 

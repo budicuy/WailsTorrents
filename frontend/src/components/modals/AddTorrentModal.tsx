@@ -21,6 +21,7 @@ import type { TorrentInspectData } from "../../types/torrent";
 
 interface AddTorrentModalProps {
 	isOpen: boolean;
+	initialFilePath?: string;
 	defaultDownloadDir: string;
 	onClose: () => void;
 	onSelectFile: () => Promise<string>;
@@ -30,6 +31,7 @@ interface AddTorrentModalProps {
 
 export const AddTorrentModal: React.FC<AddTorrentModalProps> = ({
 	isOpen,
+	initialFilePath,
 	defaultDownloadDir,
 	onClose,
 	onSelectFile,
@@ -72,12 +74,16 @@ export const AddTorrentModal: React.FC<AddTorrentModalProps> = ({
 	useEffect(() => {
 		if (isOpen) {
 			setDownloadDir(defaultDownloadDir || "");
-			setFilePath("");
+			const path = initialFilePath || "";
+			setFilePath(path);
 			setInspectData(null);
 			setError("");
 			setActiveTab("general");
+			if (path) {
+				inspectFile(path);
+			}
 		}
-	}, [isOpen, defaultDownloadDir]);
+	}, [isOpen, defaultDownloadDir, initialFilePath, inspectFile]);
 
 	if (!isOpen) return null;
 

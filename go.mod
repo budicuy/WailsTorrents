@@ -5,6 +5,7 @@ go 1.25.0
 require (
 	github.com/anacrolix/torrent v1.61.0
 	github.com/wailsapp/wails/v3 v3.0.0-beta.8
+	golang.org/x/sys v0.47.0
 	golang.org/x/time v0.14.0
 )
 
@@ -90,7 +91,6 @@ require (
 	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
 	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.39.0 // indirect
 	lukechampine.com/blake3 v1.1.6 // indirect
 	modernc.org/libc v1.74.4 // indirect

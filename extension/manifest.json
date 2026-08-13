@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "TorrentLite — Chrome Torrent & Magnet Downloader",
+  "version": "1.0.0",
+  "description": "Integrasi otomatis pengunduhan torrent & magnet link ke aplikasi TorrentLite Desktop (IDM-Style Konfirmasi Chrome)",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtzObNHOVfaWU95HSfl5+9toscmfLwWuJRrUPUyRE03uawszwQhvZlXohjw2qOxrv28vSflo0QzZg6q6dnpx70yjaMfIg9VmTcN86os/nzYHs0kK1QoKuTYQgGGVv7J5NC7jG7DfIjsusHSD4CdUQSik16Jv4emBgdzGFFpigS8ghy5VqhECpNmu6P/0abl9Hm+5Tb3wS2qLUZltFJkm8Pl3eSTOAm1D4LNu4WLgIIn797KcjJXJ9xtO5fM/xnhr/s1HgUMNQP2mZ/YC/4UvHHhZVPwPfxEmSW5ldJIBtfqGR6tVbF3LYZQ9hpeVd3xdFh3g01UKJ+PuSv+4+fIgFTQIDAQAB",
+  "permissions": [
+    "downloads",
+    "nativeMessaging",
+    "contextMenus",
+    "storage",
+    "activeTab",
+    "notifications",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "TorrentLite Downloader"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
